@@ -1,4 +1,4 @@
-# mern-stack
+# graphql
 
 ## Setup con Docker
 
