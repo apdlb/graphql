@@ -1,0 +1,22 @@
+# The endpoint of your Prisma API.
+endpoint: http://localhost:4466
+secret: my-secret
+
+# The file containing the definition of your data model.
+datamodel:
+  - database/models/role.prisma
+  - database/models/user.prisma
+
+# Seed your service with initial data based on `seed.graphql`.
+seed:
+  import: database/seeds/seed.graphql
+
+databaseType: document
+
+generate:
+  - generator: typescript-client
+    output: ./generated/prisma-client/
+
+hooks:
+  post-deploy:
+    - prisma generate

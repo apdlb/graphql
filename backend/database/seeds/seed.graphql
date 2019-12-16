@@ -1,0 +1,12 @@
+mutation {
+  first: createUser(
+    data: {
+      email: "apaez@wtelecom.es"
+      password: "$2a$10$YVtllwZW2PDqA8j.GTH8Iu6KHg33sY.2S4jT5vU44RjA3QaeNnBhe"
+      name: "Alejandro"
+      role: { create: { name: "ADMIN" } }
+    }
+  ) {
+    id
+  }
+}
