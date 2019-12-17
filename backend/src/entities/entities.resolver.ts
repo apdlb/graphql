@@ -8,11 +8,11 @@ import { PrismaService } from '../prisma/prisma.service';
 export class EntitiesResolver {
   constructor(private readonly prisma: PrismaService) {}
 
-  @Query('entities')
+  @Query('entitiesConnection')
   async getEntities(
     @Args() args: any,
     @Info() info: GraphQLResolveInfo | string,
   ): Promise<Entity[]> {
-    return await this.prisma.query.entities(args, info);
+    return await this.prisma.query.entitiesConnection(args, info);
   }
 }
