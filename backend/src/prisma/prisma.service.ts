@@ -6,7 +6,10 @@ import { Prisma } from './prisma.binding';
 export class PrismaService extends Prisma {
   constructor() {
     super({
-      endpoint: 'http://localhost:4466',
+      endpoint: `${process.env.PRISMA_PROTOCOL}://${process.env.PRISMA_HOST}${
+        process.env.PRISMA_PORT ? `:${process.env.PRISMA_PORT}` : ''
+      }`,
+      secret: process.env.PRISMA_MANAGEMENT_API_SECRET,
       debug: false,
     });
   }

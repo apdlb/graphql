@@ -703,7 +703,9 @@ export const models: Model[] = [
 export const Prisma = makePrismaClientClass<ClientConstructor<Prisma>>({
   typeDefs,
   models,
-  endpoint: `http://localhost:4466`,
-  secret: `my-secret`
+  endpoint: `${process.env["PRISMA_PROTOCOL"]}://${
+    process.env["PRISMA_HOST"]
+  }:${process.env["PRISMA_PORT"]}`,
+  secret: `${process.env["PRISMA_MANAGEMENT_API_SECRET"]}`
 });
 export const prisma = new Prisma();

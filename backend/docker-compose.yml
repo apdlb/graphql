@@ -11,9 +11,11 @@ services:
         port: 4466
         managementApiSecret: my-secret
         databases:
-          api:
+          default:
             connector: mongo
             uri: 'mongodb://prisma:prisma@mongo'
+    depends_on:
+      - mongo
 
   mongo:
     image: mongo:3.6
@@ -37,6 +39,7 @@ services:
     entrypoint: /bin/sh
     command: -c "sleep 5 && npm run start:dev"
     depends_on:
-      - mongo
+      - prisma
+
 volumes:
   mongo:
