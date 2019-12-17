@@ -1,0 +1,6 @@
+type Entity {
+  id: ID! @id
+  field1: String!
+  field2: Int
+  field3: Boolean
+}

@@ -6,6 +6,7 @@ secret: ${env:PRISMA_MANAGEMENT_API_SECRET}
 datamodel:
   - database/models/role.prisma
   - database/models/user.prisma
+  - database/models/entity.prisma
 
 # Seed your service with initial data based on `seed.graphql`.
 seed:
@@ -16,3 +17,8 @@ databaseType: document
 generate:
   - generator: typescript-client
     output: ./generated/prisma-client/
+
+hooks:
+  post-deploy:
+    - graphql get-schema --project database
+    - graphql codegen --project database

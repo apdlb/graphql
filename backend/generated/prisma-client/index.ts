@@ -16,6 +16,7 @@ export type AtLeastOne<T, U = { [K in keyof T]: Pick<T, K> }> = Partial<T> &
 export type Maybe<T> = T | undefined | null;
 
 export interface Exists {
+  entity: (where?: EntityWhereInput) => Promise<boolean>;
   role: (where?: RoleWhereInput) => Promise<boolean>;
   user: (where?: UserWhereInput) => Promise<boolean>;
 }
@@ -39,6 +40,25 @@ export interface Prisma {
    * Queries
    */
 
+  entity: (where: EntityWhereUniqueInput) => EntityNullablePromise;
+  entities: (args?: {
+    where?: EntityWhereInput;
+    orderBy?: EntityOrderByInput;
+    skip?: Int;
+    after?: String;
+    before?: String;
+    first?: Int;
+    last?: Int;
+  }) => FragmentableArray<Entity>;
+  entitiesConnection: (args?: {
+    where?: EntityWhereInput;
+    orderBy?: EntityOrderByInput;
+    skip?: Int;
+    after?: String;
+    before?: String;
+    first?: Int;
+    last?: Int;
+  }) => EntityConnectionPromise;
   role: (where: RoleWhereUniqueInput) => RoleNullablePromise;
   roles: (args?: {
     where?: RoleWhereInput;
@@ -83,6 +103,22 @@ export interface Prisma {
    * Mutations
    */
 
+  createEntity: (data: EntityCreateInput) => EntityPromise;
+  updateEntity: (args: {
+    data: EntityUpdateInput;
+    where: EntityWhereUniqueInput;
+  }) => EntityPromise;
+  updateManyEntities: (args: {
+    data: EntityUpdateManyMutationInput;
+    where?: EntityWhereInput;
+  }) => BatchPayloadPromise;
+  upsertEntity: (args: {
+    where: EntityWhereUniqueInput;
+    create: EntityCreateInput;
+    update: EntityUpdateInput;
+  }) => EntityPromise;
+  deleteEntity: (where: EntityWhereUniqueInput) => EntityPromise;
+  deleteManyEntities: (where?: EntityWhereInput) => BatchPayloadPromise;
   createRole: (data: RoleCreateInput) => RolePromise;
   updateRole: (args: {
     data: RoleUpdateInput;
@@ -124,6 +160,9 @@ export interface Prisma {
 }
 
 export interface Subscription {
+  entity: (
+    where?: EntitySubscriptionWhereInput
+  ) => EntitySubscriptionPayloadSubscription;
   role: (
     where?: RoleSubscriptionWhereInput
   ) => RoleSubscriptionPayloadSubscription;
@@ -140,6 +179,16 @@ export interface ClientConstructor<T> {
  * Types
  */
 
+export type EntityOrderByInput =
+  | "id_ASC"
+  | "id_DESC"
+  | "field1_ASC"
+  | "field1_DESC"
+  | "field2_ASC"
+  | "field2_DESC"
+  | "field3_ASC"
+  | "field3_DESC";
+
 export type RoleOrderByInput = "id_ASC" | "id_DESC" | "name_ASC" | "name_DESC";
 
 export type UserOrderByInput =
@@ -155,6 +204,52 @@ export type UserOrderByInput =
   | "surname_DESC";
 
 export type MutationType = "CREATED" | "UPDATED" | "DELETED";
+
+export type EntityWhereUniqueInput = AtLeastOne<{
+  id: Maybe<ID_Input>;
+}>;
+
+export interface EntityWhereInput {
+  id?: Maybe<ID_Input>;
+  id_not?: Maybe<ID_Input>;
+  id_in?: Maybe<ID_Input[] | ID_Input>;
+  id_not_in?: Maybe<ID_Input[] | ID_Input>;
+  id_lt?: Maybe<ID_Input>;
+  id_lte?: Maybe<ID_Input>;
+  id_gt?: Maybe<ID_Input>;
+  id_gte?: Maybe<ID_Input>;
+  id_contains?: Maybe<ID_Input>;
+  id_not_contains?: Maybe<ID_Input>;
+  id_starts_with?: Maybe<ID_Input>;
+  id_not_starts_with?: Maybe<ID_Input>;
+  id_ends_with?: Maybe<ID_Input>;
+  id_not_ends_with?: Maybe<ID_Input>;
+  field1?: Maybe<String>;
+  field1_not?: Maybe<String>;
+  field1_in?: Maybe<String[] | String>;
+  field1_not_in?: Maybe<String[] | String>;
+  field1_lt?: Maybe<String>;
+  field1_lte?: Maybe<String>;
+  field1_gt?: Maybe<String>;
+  field1_gte?: Maybe<String>;
+  field1_contains?: Maybe<String>;
+  field1_not_contains?: Maybe<String>;
+  field1_starts_with?: Maybe<String>;
+  field1_not_starts_with?: Maybe<String>;
+  field1_ends_with?: Maybe<String>;
+  field1_not_ends_with?: Maybe<String>;
+  field2?: Maybe<Int>;
+  field2_not?: Maybe<Int>;
+  field2_in?: Maybe<Int[] | Int>;
+  field2_not_in?: Maybe<Int[] | Int>;
+  field2_lt?: Maybe<Int>;
+  field2_lte?: Maybe<Int>;
+  field2_gt?: Maybe<Int>;
+  field2_gte?: Maybe<Int>;
+  field3?: Maybe<Boolean>;
+  field3_not?: Maybe<Boolean>;
+  AND?: Maybe<EntityWhereInput[] | EntityWhereInput>;
+}
 
 export type RoleWhereUniqueInput = AtLeastOne<{
   id: Maybe<ID_Input>;
@@ -271,6 +366,25 @@ export interface UserWhereInput {
   AND?: Maybe<UserWhereInput[] | UserWhereInput>;
 }
 
+export interface EntityCreateInput {
+  id?: Maybe<ID_Input>;
+  field1: String;
+  field2?: Maybe<Int>;
+  field3?: Maybe<Boolean>;
+}
+
+export interface EntityUpdateInput {
+  field1?: Maybe<String>;
+  field2?: Maybe<Int>;
+  field3?: Maybe<Boolean>;
+}
+
+export interface EntityUpdateManyMutationInput {
+  field1?: Maybe<String>;
+  field2?: Maybe<Int>;
+  field3?: Maybe<Boolean>;
+}
+
 export interface RoleCreateInput {
   id?: Maybe<ID_Input>;
   name: String;
@@ -329,6 +443,15 @@ export interface UserUpdateManyMutationInput {
   surname?: Maybe<String>;
 }
 
+export interface EntitySubscriptionWhereInput {
+  mutation_in?: Maybe<MutationType[] | MutationType>;
+  updatedFields_contains?: Maybe<String>;
+  updatedFields_contains_every?: Maybe<String[] | String>;
+  updatedFields_contains_some?: Maybe<String[] | String>;
+  node?: Maybe<EntityWhereInput>;
+  AND?: Maybe<EntitySubscriptionWhereInput[] | EntitySubscriptionWhereInput>;
+}
+
 export interface RoleSubscriptionWhereInput {
   mutation_in?: Maybe<MutationType[] | MutationType>;
   updatedFields_contains?: Maybe<String>;
@@ -349,6 +472,115 @@ export interface UserSubscriptionWhereInput {
 
 export interface NodeNode {
   id: ID_Output;
+}
+
+export interface Entity {
+  id: ID_Output;
+  field1: String;
+  field2?: Int;
+  field3?: Boolean;
+}
+
+export interface EntityPromise extends Promise<Entity>, Fragmentable {
+  id: () => Promise<ID_Output>;
+  field1: () => Promise<String>;
+  field2: () => Promise<Int>;
+  field3: () => Promise<Boolean>;
+}
+
+export interface EntitySubscription
+  extends Promise<AsyncIterator<Entity>>,
+    Fragmentable {
+  id: () => Promise<AsyncIterator<ID_Output>>;
+  field1: () => Promise<AsyncIterator<String>>;
+  field2: () => Promise<AsyncIterator<Int>>;
+  field3: () => Promise<AsyncIterator<Boolean>>;
+}
+
+export interface EntityNullablePromise
+  extends Promise<Entity | null>,
+    Fragmentable {
+  id: () => Promise<ID_Output>;
+  field1: () => Promise<String>;
+  field2: () => Promise<Int>;
+  field3: () => Promise<Boolean>;
+}
+
+export interface EntityConnection {
+  pageInfo: PageInfo;
+  edges: EntityEdge[];
+}
+
+export interface EntityConnectionPromise
+  extends Promise<EntityConnection>,
+    Fragmentable {
+  pageInfo: <T = PageInfoPromise>() => T;
+  edges: <T = FragmentableArray<EntityEdge>>() => T;
+  aggregate: <T = AggregateEntityPromise>() => T;
+}
+
+export interface EntityConnectionSubscription
+  extends Promise<AsyncIterator<EntityConnection>>,
+    Fragmentable {
+  pageInfo: <T = PageInfoSubscription>() => T;
+  edges: <T = Promise<AsyncIterator<EntityEdgeSubscription>>>() => T;
+  aggregate: <T = AggregateEntitySubscription>() => T;
+}
+
+export interface PageInfo {
+  hasNextPage: Boolean;
+  hasPreviousPage: Boolean;
+  startCursor?: String;
+  endCursor?: String;
+}
+
+export interface PageInfoPromise extends Promise<PageInfo>, Fragmentable {
+  hasNextPage: () => Promise<Boolean>;
+  hasPreviousPage: () => Promise<Boolean>;
+  startCursor: () => Promise<String>;
+  endCursor: () => Promise<String>;
+}
+
+export interface PageInfoSubscription
+  extends Promise<AsyncIterator<PageInfo>>,
+    Fragmentable {
+  hasNextPage: () => Promise<AsyncIterator<Boolean>>;
+  hasPreviousPage: () => Promise<AsyncIterator<Boolean>>;
+  startCursor: () => Promise<AsyncIterator<String>>;
+  endCursor: () => Promise<AsyncIterator<String>>;
+}
+
+export interface EntityEdge {
+  node: Entity;
+  cursor: String;
+}
+
+export interface EntityEdgePromise extends Promise<EntityEdge>, Fragmentable {
+  node: <T = EntityPromise>() => T;
+  cursor: () => Promise<String>;
+}
+
+export interface EntityEdgeSubscription
+  extends Promise<AsyncIterator<EntityEdge>>,
+    Fragmentable {
+  node: <T = EntitySubscription>() => T;
+  cursor: () => Promise<AsyncIterator<String>>;
+}
+
+export interface AggregateEntity {
+  count: Int;
+}
+
+export interface AggregateEntityPromise
+  extends Promise<AggregateEntity>,
+    Fragmentable {
+  count: () => Promise<Int>;
+}
+
+export interface AggregateEntitySubscription
+  extends Promise<AsyncIterator<AggregateEntity>>,
+    Fragmentable {
+  count: () => Promise<AsyncIterator<Int>>;
 }
 
 export interface Role {
@@ -394,29 +626,6 @@ export interface RoleConnectionSubscription
   pageInfo: <T = PageInfoSubscription>() => T;
   edges: <T = Promise<AsyncIterator<RoleEdgeSubscription>>>() => T;
   aggregate: <T = AggregateRoleSubscription>() => T;
-}
-
-export interface PageInfo {
-  hasNextPage: Boolean;
-  hasPreviousPage: Boolean;
-  startCursor?: String;
-  endCursor?: String;
-}
-
-export interface PageInfoPromise extends Promise<PageInfo>, Fragmentable {
-  hasNextPage: () => Promise<Boolean>;
-  hasPreviousPage: () => Promise<Boolean>;
-  startCursor: () => Promise<String>;
-  endCursor: () => Promise<String>;
-}
-
-export interface PageInfoSubscription
-  extends Promise<AsyncIterator<PageInfo>>,
-    Fragmentable {
-  hasNextPage: () => Promise<AsyncIterator<Boolean>>;
-  hasPreviousPage: () => Promise<AsyncIterator<Boolean>>;
-  startCursor: () => Promise<AsyncIterator<String>>;
-  endCursor: () => Promise<AsyncIterator<String>>;
 }
 
 export interface RoleEdge {
@@ -561,6 +770,56 @@ export interface BatchPayloadSubscription
   count: () => Promise<AsyncIterator<Long>>;
 }
 
+export interface EntitySubscriptionPayload {
+  mutation: MutationType;
+  node: Entity;
+  updatedFields: String[];
+  previousValues: EntityPreviousValues;
+}
+
+export interface EntitySubscriptionPayloadPromise
+  extends Promise<EntitySubscriptionPayload>,
+    Fragmentable {
+  mutation: () => Promise<MutationType>;
+  node: <T = EntityPromise>() => T;
+  updatedFields: () => Promise<String[]>;
+  previousValues: <T = EntityPreviousValuesPromise>() => T;
+}
+
+export interface EntitySubscriptionPayloadSubscription
+  extends Promise<AsyncIterator<EntitySubscriptionPayload>>,
+    Fragmentable {
+  mutation: () => Promise<AsyncIterator<MutationType>>;
+  node: <T = EntitySubscription>() => T;
+  updatedFields: () => Promise<AsyncIterator<String[]>>;
+  previousValues: <T = EntityPreviousValuesSubscription>() => T;
+}
+
+export interface EntityPreviousValues {
+  id: ID_Output;
+  field1: String;
+  field2?: Int;
+  field3?: Boolean;
+}
+
+export interface EntityPreviousValuesPromise
+  extends Promise<EntityPreviousValues>,
+    Fragmentable {
+  id: () => Promise<ID_Output>;
+  field1: () => Promise<String>;
+  field2: () => Promise<Int>;
+  field3: () => Promise<Boolean>;
+}
+
+export interface EntityPreviousValuesSubscription
+  extends Promise<AsyncIterator<EntityPreviousValues>>,
+    Fragmentable {
+  id: () => Promise<AsyncIterator<ID_Output>>;
+  field1: () => Promise<AsyncIterator<String>>;
+  field2: () => Promise<AsyncIterator<Int>>;
+  field3: () => Promise<AsyncIterator<Boolean>>;
+}
+
 export interface RoleSubscriptionPayload {
   mutation: MutationType;
   node: Role;
@@ -692,6 +951,10 @@ export const models: Model[] = [
   },
   {
     name: "User",
+    embedded: false
+  },
+  {
+    name: "Entity",
     embedded: false
   }
 ];

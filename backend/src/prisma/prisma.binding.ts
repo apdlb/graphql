@@ -5,36 +5,47 @@ import { makePrismaBindingClass, BasePrismaOptions } from 'prisma-binding'
 
 export interface Query {
     users: <T = Array<User | null>>(args: { where?: UserWhereInput | null, orderBy?: UserOrderByInput | null, skip?: Int | null, after?: String | null, before?: String | null, first?: Int | null, last?: Int | null }, info?: GraphQLResolveInfo | string, options?: Options) => Promise<T> ,
+    entities: <T = Array<Entity | null>>(args: { where?: EntityWhereInput | null, orderBy?: EntityOrderByInput | null, skip?: Int | null, after?: String | null, before?: String | null, first?: Int | null, last?: Int | null }, info?: GraphQLResolveInfo | string, options?: Options) => Promise<T> ,
     roles: <T = Array<Role | null>>(args: { where?: RoleWhereInput | null, orderBy?: RoleOrderByInput | null, skip?: Int | null, after?: String | null, before?: String | null, first?: Int | null, last?: Int | null }, info?: GraphQLResolveInfo | string, options?: Options) => Promise<T> ,
     user: <T = User | null>(args: { where: UserWhereUniqueInput }, info?: GraphQLResolveInfo | string, options?: Options) => Promise<T | null> ,
+    entity: <T = Entity | null>(args: { where: EntityWhereUniqueInput }, info?: GraphQLResolveInfo | string, options?: Options) => Promise<T | null> ,
     role: <T = Role | null>(args: { where: RoleWhereUniqueInput }, info?: GraphQLResolveInfo | string, options?: Options) => Promise<T | null> ,
     usersConnection: <T = UserConnection>(args: { where?: UserWhereInput | null, orderBy?: UserOrderByInput | null, skip?: Int | null, after?: String | null, before?: String | null, first?: Int | null, last?: Int | null }, info?: GraphQLResolveInfo | string, options?: Options) => Promise<T> ,
+    entitiesConnection: <T = EntityConnection>(args: { where?: EntityWhereInput | null, orderBy?: EntityOrderByInput | null, skip?: Int | null, after?: String | null, before?: String | null, first?: Int | null, last?: Int | null }, info?: GraphQLResolveInfo | string, options?: Options) => Promise<T> ,
     rolesConnection: <T = RoleConnection>(args: { where?: RoleWhereInput | null, orderBy?: RoleOrderByInput | null, skip?: Int | null, after?: String | null, before?: String | null, first?: Int | null, last?: Int | null }, info?: GraphQLResolveInfo | string, options?: Options) => Promise<T> ,
     node: <T = Node | null>(args: { id: ID_Output }, info?: GraphQLResolveInfo | string, options?: Options) => Promise<T | null> 
   }
 
 export interface Mutation {
     createUser: <T = User>(args: { data: UserCreateInput }, info?: GraphQLResolveInfo | string, options?: Options) => Promise<T> ,
+    createEntity: <T = Entity>(args: { data: EntityCreateInput }, info?: GraphQLResolveInfo | string, options?: Options) => Promise<T> ,
     createRole: <T = Role>(args: { data: RoleCreateInput }, info?: GraphQLResolveInfo | string, options?: Options) => Promise<T> ,
     updateUser: <T = User | null>(args: { data: UserUpdateInput, where: UserWhereUniqueInput }, info?: GraphQLResolveInfo | string, options?: Options) => Promise<T | null> ,
+    updateEntity: <T = Entity | null>(args: { data: EntityUpdateInput, where: EntityWhereUniqueInput }, info?: GraphQLResolveInfo | string, options?: Options) => Promise<T | null> ,
     updateRole: <T = Role | null>(args: { data: RoleUpdateInput, where: RoleWhereUniqueInput }, info?: GraphQLResolveInfo | string, options?: Options) => Promise<T | null> ,
     deleteUser: <T = User | null>(args: { where: UserWhereUniqueInput }, info?: GraphQLResolveInfo | string, options?: Options) => Promise<T | null> ,
+    deleteEntity: <T = Entity | null>(args: { where: EntityWhereUniqueInput }, info?: GraphQLResolveInfo | string, options?: Options) => Promise<T | null> ,
     deleteRole: <T = Role | null>(args: { where: RoleWhereUniqueInput }, info?: GraphQLResolveInfo | string, options?: Options) => Promise<T | null> ,
     upsertUser: <T = User>(args: { where: UserWhereUniqueInput, create: UserCreateInput, update: UserUpdateInput }, info?: GraphQLResolveInfo | string, options?: Options) => Promise<T> ,
+    upsertEntity: <T = Entity>(args: { where: EntityWhereUniqueInput, create: EntityCreateInput, update: EntityUpdateInput }, info?: GraphQLResolveInfo | string, options?: Options) => Promise<T> ,
     upsertRole: <T = Role>(args: { where: RoleWhereUniqueInput, create: RoleCreateInput, update: RoleUpdateInput }, info?: GraphQLResolveInfo | string, options?: Options) => Promise<T> ,
     updateManyUsers: <T = BatchPayload>(args: { data: UserUpdateManyMutationInput, where?: UserWhereInput | null }, info?: GraphQLResolveInfo | string, options?: Options) => Promise<T> ,
+    updateManyEntities: <T = BatchPayload>(args: { data: EntityUpdateManyMutationInput, where?: EntityWhereInput | null }, info?: GraphQLResolveInfo | string, options?: Options) => Promise<T> ,
     updateManyRoles: <T = BatchPayload>(args: { data: RoleUpdateManyMutationInput, where?: RoleWhereInput | null }, info?: GraphQLResolveInfo | string, options?: Options) => Promise<T> ,
     deleteManyUsers: <T = BatchPayload>(args: { where?: UserWhereInput | null }, info?: GraphQLResolveInfo | string, options?: Options) => Promise<T> ,
+    deleteManyEntities: <T = BatchPayload>(args: { where?: EntityWhereInput | null }, info?: GraphQLResolveInfo | string, options?: Options) => Promise<T> ,
     deleteManyRoles: <T = BatchPayload>(args: { where?: RoleWhereInput | null }, info?: GraphQLResolveInfo | string, options?: Options) => Promise<T> 
   }
 
 export interface Subscription {
     user: <T = UserSubscriptionPayload | null>(args: { where?: UserSubscriptionWhereInput | null }, info?: GraphQLResolveInfo | string, options?: Options) => Promise<AsyncIterator<T | null>> ,
+    entity: <T = EntitySubscriptionPayload | null>(args: { where?: EntitySubscriptionWhereInput | null }, info?: GraphQLResolveInfo | string, options?: Options) => Promise<AsyncIterator<T | null>> ,
     role: <T = RoleSubscriptionPayload | null>(args: { where?: RoleSubscriptionWhereInput | null }, info?: GraphQLResolveInfo | string, options?: Options) => Promise<AsyncIterator<T | null>> 
   }
 
 export interface Exists {
   User: (where?: UserWhereInput) => Promise<boolean>
+  Entity: (where?: EntityWhereInput) => Promise<boolean>
   Role: (where?: RoleWhereInput) => Promise<boolean>
 }
 
@@ -60,7 +71,11 @@ export interface BindingConstructor<T> {
  * Type Defs
 */
 
-const typeDefs = `type AggregateRole {
+const typeDefs = `type AggregateEntity {
+  count: Int!
+}
+
+type AggregateRole {
   count: Int!
 }
 
@@ -73,6 +88,215 @@ type BatchPayload {
   count: Long!
 }
 
+type Entity implements Node {
+  id: ID!
+  field1: String!
+  field2: Int
+  field3: Boolean
+}
+
+"""A connection to a list of items."""
+type EntityConnection {
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """A list of edges."""
+  edges: [EntityEdge]!
+  aggregate: AggregateEntity!
+}
+
+input EntityCreateInput {
+  id: ID
+  field1: String!
+  field2: Int
+  field3: Boolean
+}
+
+"""An edge in a connection."""
+type EntityEdge {
+  """The item at the end of the edge."""
+  node: Entity!
+
+  """A cursor for use in pagination."""
+  cursor: String!
+}
+
+enum EntityOrderByInput {
+  id_ASC
+  id_DESC
+  field1_ASC
+  field1_DESC
+  field2_ASC
+  field2_DESC
+  field3_ASC
+  field3_DESC
+}
+
+type EntityPreviousValues {
+  id: ID!
+  field1: String!
+  field2: Int
+  field3: Boolean
+}
+
+type EntitySubscriptionPayload {
+  mutation: MutationType!
+  node: Entity
+  updatedFields: [String!]
+  previousValues: EntityPreviousValues
+}
+
+input EntitySubscriptionWhereInput {
+  """Logical AND on all given filters."""
+  AND: [EntitySubscriptionWhereInput!]
+
+  """The subscription event gets dispatched when it's listed in mutation_in"""
+  mutation_in: [MutationType!]
+
+  """
+  The subscription event gets only dispatched when one of the updated fields names is included in this list
+  """
+  updatedFields_contains: String
+
+  """
+  The subscription event gets only dispatched when all of the field names included in this list have been updated
+  """
+  updatedFields_contains_every: [String!]
+
+  """
+  The subscription event gets only dispatched when some of the field names included in this list have been updated
+  """
+  updatedFields_contains_some: [String!]
+  node: EntityWhereInput
+}
+
+input EntityUpdateInput {
+  field1: String
+  field2: Int
+  field3: Boolean
+}
+
+input EntityUpdateManyMutationInput {
+  field1: String
+  field2: Int
+  field3: Boolean
+}
+
+input EntityWhereInput {
+  """Logical AND on all given filters."""
+  AND: [EntityWhereInput!]
+  id: ID
+
+  """All values that are not equal to given value."""
+  id_not: ID
+
+  """All values that are contained in given list."""
+  id_in: [ID!]
+
+  """All values that are not contained in given list."""
+  id_not_in: [ID!]
+
+  """All values less than the given value."""
+  id_lt: ID
+
+  """All values less than or equal the given value."""
+  id_lte: ID
+
+  """All values greater than the given value."""
+  id_gt: ID
+
+  """All values greater than or equal the given value."""
+  id_gte: ID
+
+  """All values containing the given string."""
+  id_contains: ID
+
+  """All values not containing the given string."""
+  id_not_contains: ID
+
+  """All values starting with the given string."""
+  id_starts_with: ID
+
+  """All values not starting with the given string."""
+  id_not_starts_with: ID
+
+  """All values ending with the given string."""
+  id_ends_with: ID
+
+  """All values not ending with the given string."""
+  id_not_ends_with: ID
+  field1: String
+
+  """All values that are not equal to given value."""
+  field1_not: String
+
+  """All values that are contained in given list."""
+  field1_in: [String!]
+
+  """All values that are not contained in given list."""
+  field1_not_in: [String!]
+
+  """All values less than the given value."""
+  field1_lt: String
+
+  """All values less than or equal the given value."""
+  field1_lte: String
+
+  """All values greater than the given value."""
+  field1_gt: String
+
+  """All values greater than or equal the given value."""
+  field1_gte: String
+
+  """All values containing the given string."""
+  field1_contains: String
+
+  """All values not containing the given string."""
+  field1_not_contains: String
+
+  """All values starting with the given string."""
+  field1_starts_with: String
+
+  """All values not starting with the given string."""
+  field1_not_starts_with: String
+
+  """All values ending with the given string."""
+  field1_ends_with: String
+
+  """All values not ending with the given string."""
+  field1_not_ends_with: String
+  field2: Int
+
+  """All values that are not equal to given value."""
+  field2_not: Int
+
+  """All values that are contained in given list."""
+  field2_in: [Int!]
+
+  """All values that are not contained in given list."""
+  field2_not_in: [Int!]
+
+  """All values less than the given value."""
+  field2_lt: Int
+
+  """All values less than or equal the given value."""
+  field2_lte: Int
+
+  """All values greater than the given value."""
+  field2_gt: Int
+
+  """All values greater than or equal the given value."""
+  field2_gte: Int
+  field3: Boolean
+
+  """All values that are not equal to given value."""
+  field3_not: Boolean
+}
+
+input EntityWhereUniqueInput {
+  id: ID
+}
+
 """
 The \`Long\` scalar type represents non-fractional signed whole numeric values.
 Long can represent values between -(2^63) and 2^63 - 1.
@@ -81,16 +305,22 @@ scalar Long
 
 type Mutation {
   createUser(data: UserCreateInput!): User!
+  createEntity(data: EntityCreateInput!): Entity!
   createRole(data: RoleCreateInput!): Role!
   updateUser(data: UserUpdateInput!, where: UserWhereUniqueInput!): User
+  updateEntity(data: EntityUpdateInput!, where: EntityWhereUniqueInput!): Entity
   updateRole(data: RoleUpdateInput!, where: RoleWhereUniqueInput!): Role
   deleteUser(where: UserWhereUniqueInput!): User
+  deleteEntity(where: EntityWhereUniqueInput!): Entity
   deleteRole(where: RoleWhereUniqueInput!): Role
   upsertUser(where: UserWhereUniqueInput!, create: UserCreateInput!, update: UserUpdateInput!): User!
+  upsertEntity(where: EntityWhereUniqueInput!, create: EntityCreateInput!, update: EntityUpdateInput!): Entity!
   upsertRole(where: RoleWhereUniqueInput!, create: RoleCreateInput!, update: RoleUpdateInput!): Role!
   updateManyUsers(data: UserUpdateManyMutationInput!, where: UserWhereInput): BatchPayload!
+  updateManyEntities(data: EntityUpdateManyMutationInput!, where: EntityWhereInput): BatchPayload!
   updateManyRoles(data: RoleUpdateManyMutationInput!, where: RoleWhereInput): BatchPayload!
   deleteManyUsers(where: UserWhereInput): BatchPayload!
+  deleteManyEntities(where: EntityWhereInput): BatchPayload!
   deleteManyRoles(where: RoleWhereInput): BatchPayload!
 }
 
@@ -123,10 +353,13 @@ type PageInfo {
 
 type Query {
   users(where: UserWhereInput, orderBy: UserOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [User]!
+  entities(where: EntityWhereInput, orderBy: EntityOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Entity]!
   roles(where: RoleWhereInput, orderBy: RoleOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Role]!
   user(where: UserWhereUniqueInput!): User
+  entity(where: EntityWhereUniqueInput!): Entity
   role(where: RoleWhereUniqueInput!): Role
   usersConnection(where: UserWhereInput, orderBy: UserOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): UserConnection!
+  entitiesConnection(where: EntityWhereInput, orderBy: EntityOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): EntityConnection!
   rolesConnection(where: RoleWhereInput, orderBy: RoleOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): RoleConnection!
 
   """Fetches an object given its ID"""
@@ -328,6 +561,7 @@ input RoleWhereUniqueInput {
 
 type Subscription {
   user(where: UserSubscriptionWhereInput): UserSubscriptionPayload
+  entity(where: EntitySubscriptionWhereInput): EntitySubscriptionPayload
   role(where: RoleSubscriptionWhereInput): RoleSubscriptionPayload
 }
 
@@ -652,6 +886,15 @@ export const Prisma = makePrismaBindingClass<BindingConstructor<Prisma>>({typeDe
  * Types
 */
 
+export type EntityOrderByInput =   'id_ASC' |
+  'id_DESC' |
+  'field1_ASC' |
+  'field1_DESC' |
+  'field2_ASC' |
+  'field2_DESC' |
+  'field3_ASC' |
+  'field3_DESC'
+
 export type MutationType =   'CREATED' |
   'UPDATED' |
   'DELETED'
@@ -671,6 +914,80 @@ export type UserOrderByInput =   'id_ASC' |
   'name_DESC' |
   'surname_ASC' |
   'surname_DESC'
+
+export interface EntityCreateInput {
+  id?: ID_Input | null
+  field1: String
+  field2?: Int | null
+  field3?: Boolean | null
+}
+
+export interface EntitySubscriptionWhereInput {
+  AND?: EntitySubscriptionWhereInput[] | EntitySubscriptionWhereInput | null
+  mutation_in?: MutationType[] | MutationType | null
+  updatedFields_contains?: String | null
+  updatedFields_contains_every?: String[] | String | null
+  updatedFields_contains_some?: String[] | String | null
+  node?: EntityWhereInput | null
+}
+
+export interface EntityUpdateInput {
+  field1?: String | null
+  field2?: Int | null
+  field3?: Boolean | null
+}
+
+export interface EntityUpdateManyMutationInput {
+  field1?: String | null
+  field2?: Int | null
+  field3?: Boolean | null
+}
+
+export interface EntityWhereInput {
+  AND?: EntityWhereInput[] | EntityWhereInput | null
+  id?: ID_Input | null
+  id_not?: ID_Input | null
+  id_in?: ID_Output[] | ID_Output | null
+  id_not_in?: ID_Output[] | ID_Output | null
+  id_lt?: ID_Input | null
+  id_lte?: ID_Input | null
+  id_gt?: ID_Input | null
+  id_gte?: ID_Input | null
+  id_contains?: ID_Input | null
+  id_not_contains?: ID_Input | null
+  id_starts_with?: ID_Input | null
+  id_not_starts_with?: ID_Input | null
+  id_ends_with?: ID_Input | null
+  id_not_ends_with?: ID_Input | null
+  field1?: String | null
+  field1_not?: String | null
+  field1_in?: String[] | String | null
+  field1_not_in?: String[] | String | null
+  field1_lt?: String | null
+  field1_lte?: String | null
+  field1_gt?: String | null
+  field1_gte?: String | null
+  field1_contains?: String | null
+  field1_not_contains?: String | null
+  field1_starts_with?: String | null
+  field1_not_starts_with?: String | null
+  field1_ends_with?: String | null
+  field1_not_ends_with?: String | null
+  field2?: Int | null
+  field2_not?: Int | null
+  field2_in?: Int[] | Int | null
+  field2_not_in?: Int[] | Int | null
+  field2_lt?: Int | null
+  field2_lte?: Int | null
+  field2_gt?: Int | null
+  field2_gte?: Int | null
+  field3?: Boolean | null
+  field3_not?: Boolean | null
+}
+
+export interface EntityWhereUniqueInput {
+  id?: ID_Input | null
+}
 
 export interface RoleCreateInput {
   id?: ID_Input | null
@@ -871,6 +1188,10 @@ export interface Node {
   id: ID_Output
 }
 
+export interface AggregateEntity {
+  count: Int
+}
+
 export interface AggregateRole {
   count: Int
 }
@@ -881,6 +1202,46 @@ export interface AggregateUser {
 
 export interface BatchPayload {
   count: Long
+}
+
+export interface Entity extends Node {
+  id: ID_Output
+  field1: String
+  field2?: Int | null
+  field3?: Boolean | null
+}
+
+/*
+ * A connection to a list of items.
+
+ */
+export interface EntityConnection {
+  pageInfo: PageInfo
+  edges: Array<EntityEdge | null>
+  aggregate: AggregateEntity
+}
+
+/*
+ * An edge in a connection.
+
+ */
+export interface EntityEdge {
+  node: Entity
+  cursor: String
+}
+
+export interface EntityPreviousValues {
+  id: ID_Output
+  field1: String
+  field2?: Int | null
+  field3?: Boolean | null
+}
+
+export interface EntitySubscriptionPayload {
+  mutation: MutationType
+  node?: Entity | null
+  updatedFields?: Array<String> | null
+  previousValues?: EntityPreviousValues | null
 }
 
 /*

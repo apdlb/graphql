@@ -1,5 +1,9 @@
-# source: http://localhost:4466
-# timestamp: Mon Dec 16 2019 14:15:31 GMT+0100 (GMT+01:00)
+# source: http://10.200.2.43:4466
+# timestamp: Tue Dec 17 2019 13:13:32 GMT+0100 (GMT+01:00)
+
+type AggregateEntity {
+  count: Int!
+}
 
 type AggregateRole {
   count: Int!
@@ -14,6 +18,215 @@ type BatchPayload {
   count: Long!
 }
 
+type Entity implements Node {
+  id: ID!
+  field1: String!
+  field2: Int
+  field3: Boolean
+}
+
+"""A connection to a list of items."""
+type EntityConnection {
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """A list of edges."""
+  edges: [EntityEdge]!
+  aggregate: AggregateEntity!
+}
+
+input EntityCreateInput {
+  id: ID
+  field1: String!
+  field2: Int
+  field3: Boolean
+}
+
+"""An edge in a connection."""
+type EntityEdge {
+  """The item at the end of the edge."""
+  node: Entity!
+
+  """A cursor for use in pagination."""
+  cursor: String!
+}
+
+enum EntityOrderByInput {
+  id_ASC
+  id_DESC
+  field1_ASC
+  field1_DESC
+  field2_ASC
+  field2_DESC
+  field3_ASC
+  field3_DESC
+}
+
+type EntityPreviousValues {
+  id: ID!
+  field1: String!
+  field2: Int
+  field3: Boolean
+}
+
+type EntitySubscriptionPayload {
+  mutation: MutationType!
+  node: Entity
+  updatedFields: [String!]
+  previousValues: EntityPreviousValues
+}
+
+input EntitySubscriptionWhereInput {
+  """Logical AND on all given filters."""
+  AND: [EntitySubscriptionWhereInput!]
+
+  """The subscription event gets dispatched when it's listed in mutation_in"""
+  mutation_in: [MutationType!]
+
+  """
+  The subscription event gets only dispatched when one of the updated fields names is included in this list
+  """
+  updatedFields_contains: String
+
+  """
+  The subscription event gets only dispatched when all of the field names included in this list have been updated
+  """
+  updatedFields_contains_every: [String!]
+
+  """
+  The subscription event gets only dispatched when some of the field names included in this list have been updated
+  """
+  updatedFields_contains_some: [String!]
+  node: EntityWhereInput
+}
+
+input EntityUpdateInput {
+  field1: String
+  field2: Int
+  field3: Boolean
+}
+
+input EntityUpdateManyMutationInput {
+  field1: String
+  field2: Int
+  field3: Boolean
+}
+
+input EntityWhereInput {
+  """Logical AND on all given filters."""
+  AND: [EntityWhereInput!]
+  id: ID
+
+  """All values that are not equal to given value."""
+  id_not: ID
+
+  """All values that are contained in given list."""
+  id_in: [ID!]
+
+  """All values that are not contained in given list."""
+  id_not_in: [ID!]
+
+  """All values less than the given value."""
+  id_lt: ID
+
+  """All values less than or equal the given value."""
+  id_lte: ID
+
+  """All values greater than the given value."""
+  id_gt: ID
+
+  """All values greater than or equal the given value."""
+  id_gte: ID
+
+  """All values containing the given string."""
+  id_contains: ID
+
+  """All values not containing the given string."""
+  id_not_contains: ID
+
+  """All values starting with the given string."""
+  id_starts_with: ID
+
+  """All values not starting with the given string."""
+  id_not_starts_with: ID
+
+  """All values ending with the given string."""
+  id_ends_with: ID
+
+  """All values not ending with the given string."""
+  id_not_ends_with: ID
+  field1: String
+
+  """All values that are not equal to given value."""
+  field1_not: String
+
+  """All values that are contained in given list."""
+  field1_in: [String!]
+
+  """All values that are not contained in given list."""
+  field1_not_in: [String!]
+
+  """All values less than the given value."""
+  field1_lt: String
+
+  """All values less than or equal the given value."""
+  field1_lte: String
+
+  """All values greater than the given value."""
+  field1_gt: String
+
+  """All values greater than or equal the given value."""
+  field1_gte: String
+
+  """All values containing the given string."""
+  field1_contains: String
+
+  """All values not containing the given string."""
+  field1_not_contains: String
+
+  """All values starting with the given string."""
+  field1_starts_with: String
+
+  """All values not starting with the given string."""
+  field1_not_starts_with: String
+
+  """All values ending with the given string."""
+  field1_ends_with: String
+
+  """All values not ending with the given string."""
+  field1_not_ends_with: String
+  field2: Int
+
+  """All values that are not equal to given value."""
+  field2_not: Int
+
+  """All values that are contained in given list."""
+  field2_in: [Int!]
+
+  """All values that are not contained in given list."""
+  field2_not_in: [Int!]
+
+  """All values less than the given value."""
+  field2_lt: Int
+
+  """All values less than or equal the given value."""
+  field2_lte: Int
+
+  """All values greater than the given value."""
+  field2_gt: Int
+
+  """All values greater than or equal the given value."""
+  field2_gte: Int
+  field3: Boolean
+
+  """All values that are not equal to given value."""
+  field3_not: Boolean
+}
+
+input EntityWhereUniqueInput {
+  id: ID
+}
+
 """
 The `Long` scalar type represents non-fractional signed whole numeric values.
 Long can represent values between -(2^63) and 2^63 - 1.
@@ -22,16 +235,22 @@ scalar Long
 
 type Mutation {
   createUser(data: UserCreateInput!): User!
+  createEntity(data: EntityCreateInput!): Entity!
   createRole(data: RoleCreateInput!): Role!
   updateUser(data: UserUpdateInput!, where: UserWhereUniqueInput!): User
+  updateEntity(data: EntityUpdateInput!, where: EntityWhereUniqueInput!): Entity
   updateRole(data: RoleUpdateInput!, where: RoleWhereUniqueInput!): Role
   deleteUser(where: UserWhereUniqueInput!): User
+  deleteEntity(where: EntityWhereUniqueInput!): Entity
   deleteRole(where: RoleWhereUniqueInput!): Role
   upsertUser(where: UserWhereUniqueInput!, create: UserCreateInput!, update: UserUpdateInput!): User!
+  upsertEntity(where: EntityWhereUniqueInput!, create: EntityCreateInput!, update: EntityUpdateInput!): Entity!
   upsertRole(where: RoleWhereUniqueInput!, create: RoleCreateInput!, update: RoleUpdateInput!): Role!
   updateManyUsers(data: UserUpdateManyMutationInput!, where: UserWhereInput): BatchPayload!
+  updateManyEntities(data: EntityUpdateManyMutationInput!, where: EntityWhereInput): BatchPayload!
   updateManyRoles(data: RoleUpdateManyMutationInput!, where: RoleWhereInput): BatchPayload!
   deleteManyUsers(where: UserWhereInput): BatchPayload!
+  deleteManyEntities(where: EntityWhereInput): BatchPayload!
   deleteManyRoles(where: RoleWhereInput): BatchPayload!
 }
 
@@ -64,10 +283,13 @@ type PageInfo {
 
 type Query {
   users(where: UserWhereInput, orderBy: UserOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [User]!
+  entities(where: EntityWhereInput, orderBy: EntityOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Entity]!
   roles(where: RoleWhereInput, orderBy: RoleOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Role]!
   user(where: UserWhereUniqueInput!): User
+  entity(where: EntityWhereUniqueInput!): Entity
   role(where: RoleWhereUniqueInput!): Role
   usersConnection(where: UserWhereInput, orderBy: UserOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): UserConnection!
+  entitiesConnection(where: EntityWhereInput, orderBy: EntityOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): EntityConnection!
   rolesConnection(where: RoleWhereInput, orderBy: RoleOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): RoleConnection!
 
   """Fetches an object given its ID"""
@@ -269,6 +491,7 @@ input RoleWhereUniqueInput {
 
 type Subscription {
   user(where: UserSubscriptionWhereInput): UserSubscriptionPayload
+  entity(where: EntitySubscriptionWhereInput): EntitySubscriptionPayload
   role(where: RoleSubscriptionWhereInput): RoleSubscriptionPayload
 }
 

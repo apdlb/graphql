@@ -2,7 +2,11 @@
   // Please don't change this file manually but run `prisma generate` to update it.
   // For more information, please read the docs: https://www.prisma.io/docs/prisma-client/
 
-export const typeDefs = /* GraphQL */ `type AggregateRole {
+export const typeDefs = /* GraphQL */ `type AggregateEntity {
+  count: Int!
+}
+
+type AggregateRole {
   count: Int!
 }
 
@@ -14,9 +18,132 @@ type BatchPayload {
   count: Long!
 }
 
+type Entity {
+  id: ID!
+  field1: String!
+  field2: Int
+  field3: Boolean
+}
+
+type EntityConnection {
+  pageInfo: PageInfo!
+  edges: [EntityEdge]!
+  aggregate: AggregateEntity!
+}
+
+input EntityCreateInput {
+  id: ID
+  field1: String!
+  field2: Int
+  field3: Boolean
+}
+
+type EntityEdge {
+  node: Entity!
+  cursor: String!
+}
+
+enum EntityOrderByInput {
+  id_ASC
+  id_DESC
+  field1_ASC
+  field1_DESC
+  field2_ASC
+  field2_DESC
+  field3_ASC
+  field3_DESC
+}
+
+type EntityPreviousValues {
+  id: ID!
+  field1: String!
+  field2: Int
+  field3: Boolean
+}
+
+type EntitySubscriptionPayload {
+  mutation: MutationType!
+  node: Entity
+  updatedFields: [String!]
+  previousValues: EntityPreviousValues
+}
+
+input EntitySubscriptionWhereInput {
+  mutation_in: [MutationType!]
+  updatedFields_contains: String
+  updatedFields_contains_every: [String!]
+  updatedFields_contains_some: [String!]
+  node: EntityWhereInput
+  AND: [EntitySubscriptionWhereInput!]
+}
+
+input EntityUpdateInput {
+  field1: String
+  field2: Int
+  field3: Boolean
+}
+
+input EntityUpdateManyMutationInput {
+  field1: String
+  field2: Int
+  field3: Boolean
+}
+
+input EntityWhereInput {
+  id: ID
+  id_not: ID
+  id_in: [ID!]
+  id_not_in: [ID!]
+  id_lt: ID
+  id_lte: ID
+  id_gt: ID
+  id_gte: ID
+  id_contains: ID
+  id_not_contains: ID
+  id_starts_with: ID
+  id_not_starts_with: ID
+  id_ends_with: ID
+  id_not_ends_with: ID
+  field1: String
+  field1_not: String
+  field1_in: [String!]
+  field1_not_in: [String!]
+  field1_lt: String
+  field1_lte: String
+  field1_gt: String
+  field1_gte: String
+  field1_contains: String
+  field1_not_contains: String
+  field1_starts_with: String
+  field1_not_starts_with: String
+  field1_ends_with: String
+  field1_not_ends_with: String
+  field2: Int
+  field2_not: Int
+  field2_in: [Int!]
+  field2_not_in: [Int!]
+  field2_lt: Int
+  field2_lte: Int
+  field2_gt: Int
+  field2_gte: Int
+  field3: Boolean
+  field3_not: Boolean
+  AND: [EntityWhereInput!]
+}
+
+input EntityWhereUniqueInput {
+  id: ID
+}
+
 scalar Long
 
 type Mutation {
+  createEntity(data: EntityCreateInput!): Entity!
+  updateEntity(data: EntityUpdateInput!, where: EntityWhereUniqueInput!): Entity
+  updateManyEntities(data: EntityUpdateManyMutationInput!, where: EntityWhereInput): BatchPayload!
+  upsertEntity(where: EntityWhereUniqueInput!, create: EntityCreateInput!, update: EntityUpdateInput!): Entity!
+  deleteEntity(where: EntityWhereUniqueInput!): Entity
+  deleteManyEntities(where: EntityWhereInput): BatchPayload!
   createRole(data: RoleCreateInput!): Role!
   updateRole(data: RoleUpdateInput!, where: RoleWhereUniqueInput!): Role
   updateManyRoles(data: RoleUpdateManyMutationInput!, where: RoleWhereInput): BatchPayload!
@@ -49,6 +176,9 @@ type PageInfo {
 }
 
 type Query {
+  entity(where: EntityWhereUniqueInput!): Entity
+  entities(where: EntityWhereInput, orderBy: EntityOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Entity]!
+  entitiesConnection(where: EntityWhereInput, orderBy: EntityOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): EntityConnection!
   role(where: RoleWhereUniqueInput!): Role
   roles(where: RoleWhereInput, orderBy: RoleOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Role]!
   rolesConnection(where: RoleWhereInput, orderBy: RoleOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): RoleConnection!
@@ -173,6 +303,7 @@ input RoleWhereUniqueInput {
 }
 
 type Subscription {
+  entity(where: EntitySubscriptionWhereInput): EntitySubscriptionPayload
   role(where: RoleSubscriptionWhereInput): RoleSubscriptionPayload
   user(where: UserSubscriptionWhereInput): UserSubscriptionPayload
 }
