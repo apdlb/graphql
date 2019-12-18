@@ -1,4 +1,4 @@
-import { Args, Info, Query, Resolver } from '@nestjs/graphql';
+import { Args, Info, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { Entity } from 'generated/prisma-client';
 import { GraphQLResolveInfo } from 'graphql';
 
@@ -14,5 +14,13 @@ export class EntitiesResolver {
     @Info() info: GraphQLResolveInfo | string,
   ): Promise<Entity[]> {
     return await this.prisma.query.entitiesConnection(args, info);
+  }
+
+  @Mutation('deleteEntity')
+  async deleteEntity(
+    @Args() args: any,
+    @Info() info: GraphQLResolveInfo | string,
+  ): Promise<Entity[]> {
+    return await this.prisma.mutation.deleteEntity(args, info);
   }
 }

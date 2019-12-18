@@ -1,14 +1,15 @@
-import { Icon, message, Spin } from 'antd';
+import { Icon, message } from 'antd';
 import { PaginationConfig, SorterResult, TableStateFilters } from 'antd/lib/table';
 import _ from 'lodash';
 import React, { memo, useEffect, useReducer } from 'react';
-import { QueryResult, useQuery } from 'react-apollo';
+import { QueryResult, useMutation, useQuery } from 'react-apollo';
 import { Translate } from 'react-localize-redux';
 
-import { ENTITIES_CONNECTION_QUERY } from '../../../graphql/entities';
+import { DELETE_ENTITY_MUTATION, ENTITIES_CONNECTION_QUERY } from '../../../graphql/entities';
 import { initialPaginationValues, paginationReducer } from '../../../reducers/paginationReducer';
 import CONSTANTS from '../../../utils/constants';
 import PATHS from '../../../utils/paths';
+import Loading from '../../shared/Loading';
 import PaginationFilterTable from '../../shared/PaginationFilterTable';
 
 const Entities: React.FC = () => {
@@ -17,12 +18,13 @@ const Entities: React.FC = () => {
     initialPaginationValues
   );
 
-  const { loading, error, data }: QueryResult = useQuery(
+  const { loading, error, data, refetch }: QueryResult = useQuery(
     ENTITIES_CONNECTION_QUERY,
     {
       variables: pagination
     }
   );
+  const [deleteEntity] = useMutation(DELETE_ENTITY_MUTATION);
 
   const count = data?.entitiesConnection?.aggregate?.count || 0;
   useEffect(() => {
@@ -33,20 +35,38 @@ const Entities: React.FC = () => {
   }, [count]);
 
   let entities = [] as any;
-  if (loading) return <Spin size="large" indicator={<Icon type="loading" />} />;
-  if (error) {
-    message.error("An error has occurred");
-  } else {
-    entities = data?.entitiesConnection?.edges || [];
-  }
+  if (loading) return <Loading />;
 
   const deleteRecord = (id: string) => {
-    console.log(id);
+    deleteEntity({ variables: { id } }).then(() => {
+      const total = pagination.total - 1;
+      let current = pagination.current;
+      let skip = pagination.skip;
+
+      if (total % pagination.pageSize === 0) {
+        current = current - 1;
+        skip = skip - pagination.pageSize;
+      }
+
+      const newPagination = { ...pagination, current, skip, total };
+      refetch(newPagination).then(() => {
+        dispatchPagination({
+          type: "deleteRecord",
+          payload: { current, skip, total }
+        });
+      });
+    });
   };
 
   return (
     <Translate>
       {({ translate }) => {
+        if (error) {
+          message.error(translate("generic.labels.error"));
+        } else {
+          entities = data?.entitiesConnection?.edges || [];
+        }
+
         const columns = [
           {
             title: translate("entities.labels.field1"),

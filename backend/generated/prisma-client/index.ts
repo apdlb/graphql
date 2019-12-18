@@ -187,9 +187,17 @@ export type EntityOrderByInput =
   | "field2_ASC"
   | "field2_DESC"
   | "field3_ASC"
-  | "field3_DESC";
+  | "field3_DESC"
+  | "createdAt_ASC"
+  | "createdAt_DESC";
 
-export type RoleOrderByInput = "id_ASC" | "id_DESC" | "name_ASC" | "name_DESC";
+export type RoleOrderByInput =
+  | "id_ASC"
+  | "id_DESC"
+  | "name_ASC"
+  | "name_DESC"
+  | "createdAt_ASC"
+  | "createdAt_DESC";
 
 export type UserOrderByInput =
   | "id_ASC"
@@ -201,7 +209,9 @@ export type UserOrderByInput =
   | "name_ASC"
   | "name_DESC"
   | "surname_ASC"
-  | "surname_DESC";
+  | "surname_DESC"
+  | "createdAt_ASC"
+  | "createdAt_DESC";
 
 export type MutationType = "CREATED" | "UPDATED" | "DELETED";
 
@@ -248,6 +258,14 @@ export interface EntityWhereInput {
   field2_gte?: Maybe<Int>;
   field3?: Maybe<Boolean>;
   field3_not?: Maybe<Boolean>;
+  createdAt?: Maybe<DateTimeInput>;
+  createdAt_not?: Maybe<DateTimeInput>;
+  createdAt_in?: Maybe<DateTimeInput[] | DateTimeInput>;
+  createdAt_not_in?: Maybe<DateTimeInput[] | DateTimeInput>;
+  createdAt_lt?: Maybe<DateTimeInput>;
+  createdAt_lte?: Maybe<DateTimeInput>;
+  createdAt_gt?: Maybe<DateTimeInput>;
+  createdAt_gte?: Maybe<DateTimeInput>;
   AND?: Maybe<EntityWhereInput[] | EntityWhereInput>;
 }
 
@@ -284,6 +302,14 @@ export interface RoleWhereInput {
   name_not_starts_with?: Maybe<String>;
   name_ends_with?: Maybe<String>;
   name_not_ends_with?: Maybe<String>;
+  createdAt?: Maybe<DateTimeInput>;
+  createdAt_not?: Maybe<DateTimeInput>;
+  createdAt_in?: Maybe<DateTimeInput[] | DateTimeInput>;
+  createdAt_not_in?: Maybe<DateTimeInput[] | DateTimeInput>;
+  createdAt_lt?: Maybe<DateTimeInput>;
+  createdAt_lte?: Maybe<DateTimeInput>;
+  createdAt_gt?: Maybe<DateTimeInput>;
+  createdAt_gte?: Maybe<DateTimeInput>;
   AND?: Maybe<RoleWhereInput[] | RoleWhereInput>;
 }
 
@@ -363,6 +389,14 @@ export interface UserWhereInput {
   surname_ends_with?: Maybe<String>;
   surname_not_ends_with?: Maybe<String>;
   role?: Maybe<RoleWhereInput>;
+  createdAt?: Maybe<DateTimeInput>;
+  createdAt_not?: Maybe<DateTimeInput>;
+  createdAt_in?: Maybe<DateTimeInput[] | DateTimeInput>;
+  createdAt_not_in?: Maybe<DateTimeInput[] | DateTimeInput>;
+  createdAt_lt?: Maybe<DateTimeInput>;
+  createdAt_lte?: Maybe<DateTimeInput>;
+  createdAt_gt?: Maybe<DateTimeInput>;
+  createdAt_gte?: Maybe<DateTimeInput>;
   AND?: Maybe<UserWhereInput[] | UserWhereInput>;
 }
 
@@ -479,6 +513,7 @@ export interface Entity {
   field1: String;
   field2?: Int;
   field3?: Boolean;
+  createdAt: DateTimeOutput;
 }
 
 export interface EntityPromise extends Promise<Entity>, Fragmentable {
@@ -486,6 +521,7 @@ export interface EntityPromise extends Promise<Entity>, Fragmentable {
   field1: () => Promise<String>;
   field2: () => Promise<Int>;
   field3: () => Promise<Boolean>;
+  createdAt: () => Promise<DateTimeOutput>;
 }
 
 export interface EntitySubscription
@@ -495,6 +531,7 @@ export interface EntitySubscription
   field1: () => Promise<AsyncIterator<String>>;
   field2: () => Promise<AsyncIterator<Int>>;
   field3: () => Promise<AsyncIterator<Boolean>>;
+  createdAt: () => Promise<AsyncIterator<DateTimeOutput>>;
 }
 
 export interface EntityNullablePromise
@@ -504,6 +541,7 @@ export interface EntityNullablePromise
   field1: () => Promise<String>;
   field2: () => Promise<Int>;
   field3: () => Promise<Boolean>;
+  createdAt: () => Promise<DateTimeOutput>;
 }
 
 export interface EntityConnection {
@@ -586,11 +624,13 @@ export interface AggregateEntitySubscription
 export interface Role {
   id: ID_Output;
   name: String;
+  createdAt: DateTimeOutput;
 }
 
 export interface RolePromise extends Promise<Role>, Fragmentable {
   id: () => Promise<ID_Output>;
   name: () => Promise<String>;
+  createdAt: () => Promise<DateTimeOutput>;
 }
 
 export interface RoleSubscription
@@ -598,6 +638,7 @@ export interface RoleSubscription
     Fragmentable {
   id: () => Promise<AsyncIterator<ID_Output>>;
   name: () => Promise<AsyncIterator<String>>;
+  createdAt: () => Promise<AsyncIterator<DateTimeOutput>>;
 }
 
 export interface RoleNullablePromise
@@ -605,6 +646,7 @@ export interface RoleNullablePromise
     Fragmentable {
   id: () => Promise<ID_Output>;
   name: () => Promise<String>;
+  createdAt: () => Promise<DateTimeOutput>;
 }
 
 export interface RoleConnection {
@@ -667,6 +709,7 @@ export interface User {
   password: String;
   name: String;
   surname?: String;
+  createdAt: DateTimeOutput;
 }
 
 export interface UserPromise extends Promise<User>, Fragmentable {
@@ -676,6 +719,7 @@ export interface UserPromise extends Promise<User>, Fragmentable {
   name: () => Promise<String>;
   surname: () => Promise<String>;
   role: <T = RolePromise>() => T;
+  createdAt: () => Promise<DateTimeOutput>;
 }
 
 export interface UserSubscription
@@ -687,6 +731,7 @@ export interface UserSubscription
   name: () => Promise<AsyncIterator<String>>;
   surname: () => Promise<AsyncIterator<String>>;
   role: <T = RoleSubscription>() => T;
+  createdAt: () => Promise<AsyncIterator<DateTimeOutput>>;
 }
 
 export interface UserNullablePromise
@@ -698,6 +743,7 @@ export interface UserNullablePromise
   name: () => Promise<String>;
   surname: () => Promise<String>;
   role: <T = RolePromise>() => T;
+  createdAt: () => Promise<DateTimeOutput>;
 }
 
 export interface UserConnection {
@@ -800,6 +846,7 @@ export interface EntityPreviousValues {
   field1: String;
   field2?: Int;
   field3?: Boolean;
+  createdAt: DateTimeOutput;
 }
 
 export interface EntityPreviousValuesPromise
@@ -809,6 +856,7 @@ export interface EntityPreviousValuesPromise
   field1: () => Promise<String>;
   field2: () => Promise<Int>;
   field3: () => Promise<Boolean>;
+  createdAt: () => Promise<DateTimeOutput>;
 }
 
 export interface EntityPreviousValuesSubscription
@@ -818,6 +866,7 @@ export interface EntityPreviousValuesSubscription
   field1: () => Promise<AsyncIterator<String>>;
   field2: () => Promise<AsyncIterator<Int>>;
   field3: () => Promise<AsyncIterator<Boolean>>;
+  createdAt: () => Promise<AsyncIterator<DateTimeOutput>>;
 }
 
 export interface RoleSubscriptionPayload {
@@ -848,6 +897,7 @@ export interface RoleSubscriptionPayloadSubscription
 export interface RolePreviousValues {
   id: ID_Output;
   name: String;
+  createdAt: DateTimeOutput;
 }
 
 export interface RolePreviousValuesPromise
@@ -855,6 +905,7 @@ export interface RolePreviousValuesPromise
     Fragmentable {
   id: () => Promise<ID_Output>;
   name: () => Promise<String>;
+  createdAt: () => Promise<DateTimeOutput>;
 }
 
 export interface RolePreviousValuesSubscription
@@ -862,6 +913,7 @@ export interface RolePreviousValuesSubscription
     Fragmentable {
   id: () => Promise<AsyncIterator<ID_Output>>;
   name: () => Promise<AsyncIterator<String>>;
+  createdAt: () => Promise<AsyncIterator<DateTimeOutput>>;
 }
 
 export interface UserSubscriptionPayload {
@@ -895,6 +947,7 @@ export interface UserPreviousValues {
   password: String;
   name: String;
   surname?: String;
+  createdAt: DateTimeOutput;
 }
 
 export interface UserPreviousValuesPromise
@@ -905,6 +958,7 @@ export interface UserPreviousValuesPromise
   password: () => Promise<String>;
   name: () => Promise<String>;
   surname: () => Promise<String>;
+  createdAt: () => Promise<DateTimeOutput>;
 }
 
 export interface UserPreviousValuesSubscription
@@ -915,6 +969,7 @@ export interface UserPreviousValuesSubscription
   password: () => Promise<AsyncIterator<String>>;
   name: () => Promise<AsyncIterator<String>>;
   surname: () => Promise<AsyncIterator<String>>;
+  createdAt: () => Promise<AsyncIterator<DateTimeOutput>>;
 }
 
 /*
@@ -937,6 +992,16 @@ export type Int = number;
 The `Boolean` scalar type represents `true` or `false`.
 */
 export type Boolean = boolean;
+
+/*
+DateTime scalar input type, allowing Date
+*/
+export type DateTimeInput = Date | string;
+
+/*
+DateTime scalar output type, which is always a string
+*/
+export type DateTimeOutput = string;
 
 export type Long = string;
 

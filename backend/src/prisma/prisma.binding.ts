@@ -88,11 +88,14 @@ type BatchPayload {
   count: Long!
 }
 
+scalar DateTime
+
 type Entity implements Node {
   id: ID!
   field1: String!
   field2: Int
   field3: Boolean
+  createdAt: DateTime!
 }
 
 """A connection to a list of items."""
@@ -130,6 +133,8 @@ enum EntityOrderByInput {
   field2_DESC
   field3_ASC
   field3_DESC
+  createdAt_ASC
+  createdAt_DESC
 }
 
 type EntityPreviousValues {
@@ -137,6 +142,7 @@ type EntityPreviousValues {
   field1: String!
   field2: Int
   field3: Boolean
+  createdAt: DateTime!
 }
 
 type EntitySubscriptionPayload {
@@ -291,6 +297,28 @@ input EntityWhereInput {
 
   """All values that are not equal to given value."""
   field3_not: Boolean
+  createdAt: DateTime
+
+  """All values that are not equal to given value."""
+  createdAt_not: DateTime
+
+  """All values that are contained in given list."""
+  createdAt_in: [DateTime!]
+
+  """All values that are not contained in given list."""
+  createdAt_not_in: [DateTime!]
+
+  """All values less than the given value."""
+  createdAt_lt: DateTime
+
+  """All values less than or equal the given value."""
+  createdAt_lte: DateTime
+
+  """All values greater than the given value."""
+  createdAt_gt: DateTime
+
+  """All values greater than or equal the given value."""
+  createdAt_gte: DateTime
 }
 
 input EntityWhereUniqueInput {
@@ -372,6 +400,7 @@ type Query {
 type Role implements Node {
   id: ID!
   name: String!
+  createdAt: DateTime!
 }
 
 """A connection to a list of items."""
@@ -408,11 +437,14 @@ enum RoleOrderByInput {
   id_DESC
   name_ASC
   name_DESC
+  createdAt_ASC
+  createdAt_DESC
 }
 
 type RolePreviousValues {
   id: ID!
   name: String!
+  createdAt: DateTime!
 }
 
 type RoleSubscriptionPayload {
@@ -553,6 +585,28 @@ input RoleWhereInput {
 
   """All values not ending with the given string."""
   name_not_ends_with: String
+  createdAt: DateTime
+
+  """All values that are not equal to given value."""
+  createdAt_not: DateTime
+
+  """All values that are contained in given list."""
+  createdAt_in: [DateTime!]
+
+  """All values that are not contained in given list."""
+  createdAt_not_in: [DateTime!]
+
+  """All values less than the given value."""
+  createdAt_lt: DateTime
+
+  """All values less than or equal the given value."""
+  createdAt_lte: DateTime
+
+  """All values greater than the given value."""
+  createdAt_gt: DateTime
+
+  """All values greater than or equal the given value."""
+  createdAt_gte: DateTime
 }
 
 input RoleWhereUniqueInput {
@@ -572,6 +626,7 @@ type User implements Node {
   name: String!
   surname: String
   role: Role!
+  createdAt: DateTime!
 }
 
 """A connection to a list of items."""
@@ -613,6 +668,8 @@ enum UserOrderByInput {
   name_DESC
   surname_ASC
   surname_DESC
+  createdAt_ASC
+  createdAt_DESC
 }
 
 type UserPreviousValues {
@@ -621,6 +678,7 @@ type UserPreviousValues {
   password: String!
   name: String!
   surname: String
+  createdAt: DateTime!
 }
 
 type UserSubscriptionPayload {
@@ -872,6 +930,28 @@ input UserWhereInput {
 
   """All values not ending with the given string."""
   surname_not_ends_with: String
+  createdAt: DateTime
+
+  """All values that are not equal to given value."""
+  createdAt_not: DateTime
+
+  """All values that are contained in given list."""
+  createdAt_in: [DateTime!]
+
+  """All values that are not contained in given list."""
+  createdAt_not_in: [DateTime!]
+
+  """All values less than the given value."""
+  createdAt_lt: DateTime
+
+  """All values less than or equal the given value."""
+  createdAt_lte: DateTime
+
+  """All values greater than the given value."""
+  createdAt_gt: DateTime
+
+  """All values greater than or equal the given value."""
+  createdAt_gte: DateTime
   role: RoleWhereInput
 }
 
@@ -893,7 +973,9 @@ export type EntityOrderByInput =   'id_ASC' |
   'field2_ASC' |
   'field2_DESC' |
   'field3_ASC' |
-  'field3_DESC'
+  'field3_DESC' |
+  'createdAt_ASC' |
+  'createdAt_DESC'
 
 export type MutationType =   'CREATED' |
   'UPDATED' |
@@ -902,7 +984,9 @@ export type MutationType =   'CREATED' |
 export type RoleOrderByInput =   'id_ASC' |
   'id_DESC' |
   'name_ASC' |
-  'name_DESC'
+  'name_DESC' |
+  'createdAt_ASC' |
+  'createdAt_DESC'
 
 export type UserOrderByInput =   'id_ASC' |
   'id_DESC' |
@@ -913,7 +997,9 @@ export type UserOrderByInput =   'id_ASC' |
   'name_ASC' |
   'name_DESC' |
   'surname_ASC' |
-  'surname_DESC'
+  'surname_DESC' |
+  'createdAt_ASC' |
+  'createdAt_DESC'
 
 export interface EntityCreateInput {
   id?: ID_Input | null
@@ -983,6 +1069,14 @@ export interface EntityWhereInput {
   field2_gte?: Int | null
   field3?: Boolean | null
   field3_not?: Boolean | null
+  createdAt?: DateTime | null
+  createdAt_not?: DateTime | null
+  createdAt_in?: DateTime[] | DateTime | null
+  createdAt_not_in?: DateTime[] | DateTime | null
+  createdAt_lt?: DateTime | null
+  createdAt_lte?: DateTime | null
+  createdAt_gt?: DateTime | null
+  createdAt_gte?: DateTime | null
 }
 
 export interface EntityWhereUniqueInput {
@@ -1062,6 +1156,14 @@ export interface RoleWhereInput {
   name_not_starts_with?: String | null
   name_ends_with?: String | null
   name_not_ends_with?: String | null
+  createdAt?: DateTime | null
+  createdAt_not?: DateTime | null
+  createdAt_in?: DateTime[] | DateTime | null
+  createdAt_not_in?: DateTime[] | DateTime | null
+  createdAt_lt?: DateTime | null
+  createdAt_lte?: DateTime | null
+  createdAt_gt?: DateTime | null
+  createdAt_gte?: DateTime | null
 }
 
 export interface RoleWhereUniqueInput {
@@ -1173,6 +1275,14 @@ export interface UserWhereInput {
   surname_not_starts_with?: String | null
   surname_ends_with?: String | null
   surname_not_ends_with?: String | null
+  createdAt?: DateTime | null
+  createdAt_not?: DateTime | null
+  createdAt_in?: DateTime[] | DateTime | null
+  createdAt_not_in?: DateTime[] | DateTime | null
+  createdAt_lt?: DateTime | null
+  createdAt_lte?: DateTime | null
+  createdAt_gt?: DateTime | null
+  createdAt_gte?: DateTime | null
   role?: RoleWhereInput | null
 }
 
@@ -1209,6 +1319,7 @@ export interface Entity extends Node {
   field1: String
   field2?: Int | null
   field3?: Boolean | null
+  createdAt: DateTime
 }
 
 /*
@@ -1235,6 +1346,7 @@ export interface EntityPreviousValues {
   field1: String
   field2?: Int | null
   field3?: Boolean | null
+  createdAt: DateTime
 }
 
 export interface EntitySubscriptionPayload {
@@ -1258,6 +1370,7 @@ export interface PageInfo {
 export interface Role extends Node {
   id: ID_Output
   name: String
+  createdAt: DateTime
 }
 
 /*
@@ -1282,6 +1395,7 @@ export interface RoleEdge {
 export interface RolePreviousValues {
   id: ID_Output
   name: String
+  createdAt: DateTime
 }
 
 export interface RoleSubscriptionPayload {
@@ -1298,6 +1412,7 @@ export interface User extends Node {
   name: String
   surname?: String | null
   role: Role
+  createdAt: DateTime
 }
 
 /*
@@ -1325,6 +1440,7 @@ export interface UserPreviousValues {
   password: String
   name: String
   surname?: String | null
+  createdAt: DateTime
 }
 
 export interface UserSubscriptionPayload {
@@ -1338,6 +1454,8 @@ export interface UserSubscriptionPayload {
 The `Boolean` scalar type represents `true` or `false`.
 */
 export type Boolean = boolean
+
+export type DateTime = Date | string
 
 /*
 The `ID` scalar type represents a unique identifier, often used to refetch an object or as key for a cache. The ID type appears in a JSON response as a String; however, it is not intended to be human-readable. When expected as an input type, any string (such as `"4"`) or integer (such as `4`) input value will be accepted as an ID.

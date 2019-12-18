@@ -25,6 +25,16 @@ export const paginationReducer = (state: any, action: any) => {
         current: action.payload,
         skip: action.payload * state.pageSize - state.pageSize
       };
+    case "deleteRecord":
+      return {
+        ...state,
+        current: action.payload.current,
+        skip: action.payload.skip,
+        total: action.payload.total
+      };
+    case "reset": {
+      return initialPaginationValues;
+    }
     default:
       return state;
   }

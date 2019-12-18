@@ -1,4 +1,5 @@
 type Role {
   id: ID! @id
   name: String!
+  createdAt: DateTime! @createdAt
 }

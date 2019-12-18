@@ -5,4 +5,5 @@ type User {
   name: String!
   surname: String
   role: Role! @relation(link: INLINE)
+  createdAt: DateTime! @createdAt
 }

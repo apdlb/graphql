@@ -18,11 +18,14 @@ type BatchPayload {
   count: Long!
 }
 
+scalar DateTime
+
 type Entity {
   id: ID!
   field1: String!
   field2: Int
   field3: Boolean
+  createdAt: DateTime!
 }
 
 type EntityConnection {
@@ -52,6 +55,8 @@ enum EntityOrderByInput {
   field2_DESC
   field3_ASC
   field3_DESC
+  createdAt_ASC
+  createdAt_DESC
 }
 
 type EntityPreviousValues {
@@ -59,6 +64,7 @@ type EntityPreviousValues {
   field1: String!
   field2: Int
   field3: Boolean
+  createdAt: DateTime!
 }
 
 type EntitySubscriptionPayload {
@@ -128,6 +134,14 @@ input EntityWhereInput {
   field2_gte: Int
   field3: Boolean
   field3_not: Boolean
+  createdAt: DateTime
+  createdAt_not: DateTime
+  createdAt_in: [DateTime!]
+  createdAt_not_in: [DateTime!]
+  createdAt_lt: DateTime
+  createdAt_lte: DateTime
+  createdAt_gt: DateTime
+  createdAt_gte: DateTime
   AND: [EntityWhereInput!]
 }
 
@@ -191,6 +205,7 @@ type Query {
 type Role {
   id: ID!
   name: String!
+  createdAt: DateTime!
 }
 
 type RoleConnection {
@@ -219,11 +234,14 @@ enum RoleOrderByInput {
   id_DESC
   name_ASC
   name_DESC
+  createdAt_ASC
+  createdAt_DESC
 }
 
 type RolePreviousValues {
   id: ID!
   name: String!
+  createdAt: DateTime!
 }
 
 type RoleSubscriptionPayload {
@@ -295,6 +313,14 @@ input RoleWhereInput {
   name_not_starts_with: String
   name_ends_with: String
   name_not_ends_with: String
+  createdAt: DateTime
+  createdAt_not: DateTime
+  createdAt_in: [DateTime!]
+  createdAt_not_in: [DateTime!]
+  createdAt_lt: DateTime
+  createdAt_lte: DateTime
+  createdAt_gt: DateTime
+  createdAt_gte: DateTime
   AND: [RoleWhereInput!]
 }
 
@@ -315,6 +341,7 @@ type User {
   name: String!
   surname: String
   role: Role!
+  createdAt: DateTime!
 }
 
 type UserConnection {
@@ -348,6 +375,8 @@ enum UserOrderByInput {
   name_DESC
   surname_ASC
   surname_DESC
+  createdAt_ASC
+  createdAt_DESC
 }
 
 type UserPreviousValues {
@@ -356,6 +385,7 @@ type UserPreviousValues {
   password: String!
   name: String!
   surname: String
+  createdAt: DateTime!
 }
 
 type UserSubscriptionPayload {
@@ -461,6 +491,14 @@ input UserWhereInput {
   surname_ends_with: String
   surname_not_ends_with: String
   role: RoleWhereInput
+  createdAt: DateTime
+  createdAt_not: DateTime
+  createdAt_in: [DateTime!]
+  createdAt_not_in: [DateTime!]
+  createdAt_lt: DateTime
+  createdAt_lte: DateTime
+  createdAt_gt: DateTime
+  createdAt_gte: DateTime
   AND: [UserWhereInput!]
 }
 

@@ -7,6 +7,10 @@ export const ENTITIES_CONNECTION_QUERY = gql`
     $orderBy: EntityOrderByInput
   ) {
     entitiesConnection(skip: $skip, first: $pageSize, orderBy: $orderBy) {
+      pageInfo {
+        hasNextPage
+        hasPreviousPage
+      }
       edges {
         node {
           id
@@ -18,6 +22,14 @@ export const ENTITIES_CONNECTION_QUERY = gql`
       aggregate {
         count
       }
+    }
+  }
+`;
+
+export const DELETE_ENTITY_MUTATION = gql`
+  mutation DeleteEntity($id: ID) {
+    deleteEntity(where: { id: $id }) {
+      id
     }
   }
 `;
