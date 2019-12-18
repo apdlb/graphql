@@ -11,6 +11,12 @@
       "no": ["No", "No"],
       "save": ["Save", "Guardar"]
     },
-    "error": ["An error has occurred", "Ha ocurrido un error"]
+    "error": ["An error has occurred", "Ha ocurrido un error"],
+    "modals": {
+      "delete": [
+        "Are you sure you want to delete this?",
+        "¿Está seguro de que desea eliminar esto?"
+      ]
+    }
   }
 }
