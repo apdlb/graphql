@@ -2,12 +2,12 @@ import gql from 'graphql-tag';
 
 export const ENTITIES_CONNECTION_QUERY = gql`
   query EntitiesConnection(
-    $first: Int
+    $pageSize: Int
     $skip: Int
     $orderBy: EntityOrderByInput
   ) {
     entities: entitiesConnection(
-      first: $first
+      first: $pageSize
       skip: $skip
       orderBy: $orderBy
     ) {
