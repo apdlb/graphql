@@ -4,19 +4,13 @@ export const ENTITIES_CONNECTION_QUERY = gql`
   query EntitiesConnection(
     $first: Int
     $skip: Int
-    $after: String
     $orderBy: EntityOrderByInput
   ) {
     entities: entitiesConnection(
       first: $first
       skip: $skip
-      after: $after
       orderBy: $orderBy
     ) {
-      pageInfo {
-        startCursor
-        endCursor
-      }
       edges {
         node {
           id
