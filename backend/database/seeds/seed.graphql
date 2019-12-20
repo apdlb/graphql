@@ -9,4 +9,67 @@ mutation {
   ) {
     id
   }
+  second: createEntity(data: { field1: "1" }) {
+    id
+  }
+  third: createEntity(data: { field1: "1" }) {
+    id
+  }
+  fourth: createEntity(data: { field1: "1" }) {
+    id
+  }
+  fifth: createEntity(data: { field1: "1" }) {
+    id
+  }
+  sixth: createEntity(data: { field1: "1" }) {
+    id
+  }
+  seventh: createEntity(data: { field1: "1" }) {
+    id
+  }
+  eighth: createEntity(data: { field1: "1" }) {
+    id
+  }
+  ninth: createEntity(data: { field1: "1" }) {
+    id
+  }
+  tenth: createEntity(data: { field1: "1" }) {
+    id
+  }
+  eleventh: createEntity(data: { field1: "1" }) {
+    id
+  }
+  twelfth: createEntity(data: { field1: "1" }) {
+    id
+  }
+  thirteenth: createEntity(data: { field1: "1" }) {
+    id
+  }
+  fourteenth: createEntity(data: { field1: "1" }) {
+    id
+  }
+  fifteenth: createEntity(data: { field1: "1" }) {
+    id
+  }
+  sixteenth: createEntity(data: { field1: "1" }) {
+    id
+  }
+  seventeenth: createEntity(data: { field1: "1" }) {
+    id
+  }
+  eighteenth: createEntity(data: { field1: "1" }) {
+    id
+  }
+  nineteenth: createEntity(data: { field1: "1" }) {
+    id
+  }
+  twentieth: createEntity(data: { field1: "1" }) {
+    id
+  }
+  twentyfirst: createEntity(data: { field1: "1" }) {
+    id
+  }
+  twentytwo: createEntity(data: { field1: "1" }) {
+    id
+  }
 }
