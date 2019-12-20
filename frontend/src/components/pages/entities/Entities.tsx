@@ -1,60 +1,69 @@
 import { Icon, message } from 'antd';
 import { PaginationConfig, SorterResult, TableStateFilters } from 'antd/lib/table';
 import _ from 'lodash';
-import React, { memo, useEffect, useReducer } from 'react';
+import React, { memo, useState } from 'react';
 import { QueryResult, useMutation, useQuery } from 'react-apollo';
 import { Translate } from 'react-localize-redux';
 
 import { DELETE_ENTITY_MUTATION, ENTITIES_CONNECTION_QUERY } from '../../../graphql/entities';
-import { initialPaginationValues, paginationReducer } from '../../../reducers/paginationReducer';
 import CONSTANTS from '../../../utils/constants';
 import PATHS from '../../../utils/paths';
 import Loading from '../../shared/Loading';
 import PaginationFilterTable from '../../shared/PaginationFilterTable';
 
 const Entities: React.FC = () => {
-  const [pagination, dispatchPagination] = useReducer(
-    paginationReducer,
-    initialPaginationValues
-  );
-
-  const { loading, error, data, refetch }: QueryResult = useQuery(
-    ENTITIES_CONNECTION_QUERY,
-    {
-      variables: pagination
-    }
-  );
+  const [current, setCurrent] = useState(1);
+  const {
+    data: { entities, entitiesConnection } = {},
+    loading,
+    error,
+    fetchMore
+  }: QueryResult = useQuery(ENTITIES_CONNECTION_QUERY, {
+    variables: { first: CONSTANTS.PAGE_SIZE_2 }
+  });
   const [deleteEntity] = useMutation(DELETE_ENTITY_MUTATION);
 
-  const count = data?.entitiesConnection?.aggregate?.count || 0;
-  useEffect(() => {
-    dispatchPagination({
-      type: "total",
-      payload: count
-    });
-  }, [count]);
-
-  let entities = [] as any;
+  let dataSource = [] as any;
   if (loading) return <Loading />;
 
   const deleteRecord = (id: string) => {
-    deleteEntity({ variables: { id } }).then(() => {
-      const total = pagination.total - 1;
-      let current = pagination.current;
-      let skip = pagination.skip;
+    deleteEntity({
+      variables: { id },
+      update(cache) {
+        const oldCount = entitiesConnection.aggregate.count;
+        const newCount = oldCount - 1;
 
-      if (total % pagination.pageSize === 0) {
-        current = current - 1;
-        skip = skip - pagination.pageSize;
+        try {
+          const data = cache.readQuery({
+            query: ENTITIES_CONNECTION_QUERY,
+            variables: { first: CONSTANTS.PAGE_SIZE_2 }
+          }) as any;
+
+          fetchMore({
+            query: ENTITIES_CONNECTION_QUERY,
+            variables: {
+              first: CONSTANTS.PAGE_SIZE_2,
+              skip:
+                newCount % CONSTANTS.PAGE_SIZE_2 === 0
+                  ? newCount - CONSTANTS.PAGE_SIZE_2
+                  : (current - 1) * CONSTANTS.PAGE_SIZE_2
+            },
+            updateQuery: (prev, { fetchMoreResult }) => {
+              if (!fetchMoreResult) return prev;
+              return fetchMoreResult;
+            }
+          });
+
+          data.entitiesConnection.aggregate.count = newCount;
+          cache.writeQuery({
+            query: ENTITIES_CONNECTION_QUERY,
+            variables: { first: CONSTANTS.PAGE_SIZE_2 },
+            data
+          });
+        } catch (err) {
+          console.log(err);
+        }
       }
-
-      const newPagination = { ...pagination, current, skip, total };
-      refetch(newPagination).then(() => {
-        dispatchPagination({
-          type: "deleteRecord",
-          payload: { current, skip, total }
-        });
-      });
     });
   };
 
@@ -64,7 +73,7 @@ const Entities: React.FC = () => {
         if (error) {
           message.error(translate("generic.labels.error"));
         } else {
-          entities = data?.entitiesConnection?.edges || [];
+          dataSource = entities?.edges || [];
         }
 
         const columns = [
@@ -92,6 +101,12 @@ const Entities: React.FC = () => {
           filters: TableStateFilters,
           sorter: SorterResult<any>
         ) => {
+          const newCurrent = pagination.current as number;
+          const variables = {
+            first: CONSTANTS.PAGE_SIZE_2,
+            skip: (newCurrent - 1) * CONSTANTS.PAGE_SIZE_2
+          } as any;
+
           if (!_.isEmpty(sorter)) {
             const orderBy = sorter.order
               ? `${sorter.field.replace(
@@ -99,24 +114,31 @@ const Entities: React.FC = () => {
                   ""
                 )}_${CONSTANTS.ORDER_ANTD_TABLE_ORDER_MAP.get(sorter.order)}`
               : undefined;
-            dispatchPagination({
-              type: "sort",
-              payload: orderBy
-            });
+            variables.orderBy = orderBy;
           }
 
-          dispatchPagination({
-            type: "page",
-            payload: pagination.current
+          fetchMore({
+            query: ENTITIES_CONNECTION_QUERY,
+            variables,
+            updateQuery: (prev, { fetchMoreResult }) => {
+              if (!fetchMoreResult) return prev;
+              return fetchMoreResult;
+            }
           });
+
+          setCurrent(newCurrent);
         };
 
         return (
           <PaginationFilterTable
             columns={columns}
             keyId="node.id"
-            dataSource={entities}
-            pagination={pagination}
+            dataSource={dataSource}
+            pagination={{
+              current,
+              defaultPageSize: CONSTANTS.PAGE_SIZE_2,
+              total: entitiesConnection?.aggregate?.count
+            }}
             onChange={handleOnChange}
             actions={{
               edit: true,

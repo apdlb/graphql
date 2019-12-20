@@ -2,14 +2,20 @@ import gql from 'graphql-tag';
 
 export const ENTITIES_CONNECTION_QUERY = gql`
   query EntitiesConnection(
+    $first: Int
     $skip: Int
-    $pageSize: Int
+    $after: String
     $orderBy: EntityOrderByInput
   ) {
-    entitiesConnection(skip: $skip, first: $pageSize, orderBy: $orderBy) {
+    entities: entitiesConnection(
+      first: $first
+      skip: $skip
+      after: $after
+      orderBy: $orderBy
+    ) {
       pageInfo {
-        hasNextPage
-        hasPreviousPage
+        startCursor
+        endCursor
       }
       edges {
         node {
@@ -19,6 +25,8 @@ export const ENTITIES_CONNECTION_QUERY = gql`
           field3
         }
       }
+    }
+    entitiesConnection {
       aggregate {
         count
       }
