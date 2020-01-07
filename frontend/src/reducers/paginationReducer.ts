@@ -20,15 +20,6 @@ export const paginationReducer = (state: any, action: any) => {
         delete newState.orderBy;
       }
       return newState;
-    case "deleteRecord":
-      return {
-        ...state,
-        current: action.payload.current,
-        skip: action.payload.skip,
-        total: action.payload.total
-      };
-    case "reset":
-      return initialPaginationValues;
 
     default:
       return state;
