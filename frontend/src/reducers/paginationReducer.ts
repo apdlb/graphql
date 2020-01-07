@@ -27,9 +27,9 @@ export const paginationReducer = (state: any, action: any) => {
         skip: action.payload.skip,
         total: action.payload.total
       };
-    case "reset": {
+    case "reset":
       return initialPaginationValues;
-    }
+
     default:
       return state;
   }
